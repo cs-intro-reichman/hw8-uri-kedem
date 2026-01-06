@@ -73,7 +73,7 @@ public class Network {
      * or if the "follows" addition failed for some reason, returns false.
      */
     public boolean addFollowee(String name1, String name2) {
-        if (getUser(name1) == null || getUser(name2) == null) {
+        if (getUser(name1) == null || getUser(name2) == null || name1.equals(name2)) {
             return false;
         }
         if (getUser(name1).addFollowee(name2)) {
@@ -107,13 +107,17 @@ public class Network {
      * The user who appears the most in the follow lists of all the users.
      */
     public String mostPopularUser() {
-        String result = this.users[0].getName();
-        for (int i = 0; i < this.userCount - 1; i++) {
-            if (followeeCount(this.users[i + 1].getName()) > followeeCount(this.users[i].getName())) {
-                result = this.users[i + 1].getName();
+        if (this.userCount == 0) {
+            return null;
+        } else {
+            String result = this.users[0].getName();
+            for (int i = 0; i < this.userCount - 1; i++) {
+                if (followeeCount(this.users[i + 1].getName()) > followeeCount(result)) {
+                    result = this.users[i + 1].getName();
+                }
             }
+            return result;
         }
-        return result;
     }
 
     /**
@@ -134,9 +138,9 @@ public class Network {
     // Returns a textual description of all the users in this network, and who they
     // follow.
     public String toString() {
-        String result = "";
+        String result = "Network: ";
         for (int i = 0; i < this.userCount; i++) {
-            result = result + " " + this.users[i].toString();
+            result = result + "\n" + this.users[i].toString();
         }
         return result;
     }
